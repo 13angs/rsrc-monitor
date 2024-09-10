@@ -17,26 +17,23 @@ class FuelDataScraper:
             raise Exception(f"Failed to load page {self.url}")
         return response.content
     
-    def parse_fuel_data(self, html_content: str, class_name: str):
+    def parse_fuel_data(self, html_content: str, class_name: str, provider: str):
         """Parse HTML content to extract fuel prices"""
         soup = BeautifulSoup(html_content, 'html.parser')
         article = soup.find('article', class_=class_name)
         
-        # Extract the header info (logo alt text and title)
-        header_title = article.find('header').find('h3').text.strip()
-
-        # Generate filename if not provided
-        # if not self.output_filename:
-        self.output_filename = header_title + '.csv'
-        
         # Extract the fuel types and prices
-        fuel_prices = {}
+        fuel_data = []
         for li in article.find_all('li'):
             fuel_type = li.find('span').text.strip()
-            fuel_price = li.find('em').text.strip()
-            fuel_prices[fuel_type] = fuel_price
+            fuel_price = float(li.find('em').text.strip())  # Convert price to float
+            fuel_data.append({
+                'provider': provider,
+                'type': fuel_type,
+                'price': fuel_price
+            })
         
-        return fuel_prices
+        return fuel_data
 
     def file_has_data(self, filename: str) -> bool:
         """Check if the file exists and contains data"""
@@ -47,7 +44,7 @@ class FuelDataScraper:
             reader = csv.reader(file)
             return any(row for row in reader)  # Check if the file has any rows
 
-    def save_to_csv(self, fuel_prices: dict):
+    def save_to_csv(self, fuel_data: list):
         """Save fuel prices to a CSV file"""
         current_date = datetime.now().strftime('%d-%m-%Y')
         file_exists = self.file_has_data(self.output_filename)
@@ -58,79 +55,75 @@ class FuelDataScraper:
 
             # Write the header if the file is empty
             if not file_exists:
-                writer.writerow(['วันที่'] + list(fuel_prices.keys()))
+                writer.writerow(['date', 'provider', 'type', 'price'])
 
-            # Write the data row
-            writer.writerow([current_date] + list(fuel_prices.values()))
+            # Write the data rows
+            for entry in fuel_data:
+                writer.writerow([current_date, entry['provider'], entry['type'], entry['price']])
 
         print(f"Data saved to {self.output_filename}")
     
-    def scrape_ptt(self):
+    def scrape_ptt(self, html_content):
         print('Scraping PTT...')
-        html_content = self.fetch_data()
-        fuel_prices = self.parse_fuel_data(html_content, 'gasprice ptt')
-        self.save_to_csv(fuel_prices)
+        fuel_data = self.parse_fuel_data(html_content, 'gasprice ptt', 'ptt')
+        self.save_to_csv(fuel_data)
         print('Delay for 2 sec...')
         time.sleep(2)
     
-    def scrape_bcp(self):
+    def scrape_bcp(self, html_content):
         print('Scraping BCP...')
-        html_content = self.fetch_data()
-        fuel_prices = self.parse_fuel_data(html_content, 'gasprice bcp')
-        self.save_to_csv(fuel_prices)
+        fuel_data = self.parse_fuel_data(html_content, 'gasprice bcp', 'bcp')
+        self.save_to_csv(fuel_data)
         print('Delay for 2 sec...')
         time.sleep(2)
     
-    def scrape_bcp(self):
-        print('Scraping BCP...')
-        html_content = self.fetch_data()
-        fuel_prices = self.parse_fuel_data(html_content, 'gasprice shell')
-        self.save_to_csv(fuel_prices)
+    def scrape_shell(self, html_content):
+        print('Scraping Shell...')
+        fuel_data = self.parse_fuel_data(html_content, 'gasprice shell', 'shell')
+        self.save_to_csv(fuel_data)
         print('Delay for 2 sec...')
         time.sleep(2)
     
-    def scrape_esso(self):
+    def scrape_esso(self, html_content):
         print('Scraping ESSO...')
-        html_content = self.fetch_data()
-        fuel_prices = self.parse_fuel_data(html_content, 'gasprice esso')
-        self.save_to_csv(fuel_prices)
+        fuel_data = self.parse_fuel_data(html_content, 'gasprice esso', 'esso')
+        self.save_to_csv(fuel_data)
         print('Delay for 2 sec...')
         time.sleep(2)
     
-    def scrape_caltex(self):
+    def scrape_caltex(self, html_content):
         print('Scraping CALTEX...')
-        html_content = self.fetch_data()
-        fuel_prices = self.parse_fuel_data(html_content, 'gasprice caltex')
-        self.save_to_csv(fuel_prices)
+        fuel_data = self.parse_fuel_data(html_content, 'gasprice caltex', 'caltex')
+        self.save_to_csv(fuel_data)
         print('Delay for 2 sec...')
         time.sleep(2)
     
-    def scrape_pt(self):
+    def scrape_pt(self, html_content):
         print('Scraping PT...')
-        html_content = self.fetch_data()
-        fuel_prices = self.parse_fuel_data(html_content, 'gasprice pt')
-        self.save_to_csv(fuel_prices)
+        fuel_data = self.parse_fuel_data(html_content, 'gasprice pt', 'pt')
+        self.save_to_csv(fuel_data)
         print('Delay for 2 sec...')
         time.sleep(2)
     
-    def scrape_susco(self):
+    def scrape_susco(self, html_content):
         print('Scraping SUSCO...')
-        html_content = self.fetch_data()
-        fuel_prices = self.parse_fuel_data(html_content, 'gasprice susco')
-        self.save_to_csv(fuel_prices)
+        fuel_data = self.parse_fuel_data(html_content, 'gasprice susco', 'susco')
+        self.save_to_csv(fuel_data)
         print('Delay for 2 sec...')
         time.sleep(2)
 
     def run(self):
         """Main function to fetch, parse, and save data"""
-        self.scrape_ptt()
-        self.scrape_bcp()
-        self.scrape_esso()
-        self.scrape_caltex()
-        self.scrape_pt()
-        self.scrape_susco()
+        html_content = self.fetch_data()
+        self.scrape_ptt(html_content)
+        self.scrape_bcp(html_content)
+        self.scrape_shell(html_content)
+        self.scrape_esso(html_content)
+        self.scrape_caltex(html_content)
+        self.scrape_pt(html_content)
+        self.scrape_susco(html_content)
         
 
 if __name__ == "__main__":
-    scraper = FuelDataScraper(url='https://gasprice.kapook.com/gasprice.php')
+    scraper = FuelDataScraper(url='https://gasprice.kapook.com/gasprice.php', output_filename='fuels.csv')
     scraper.run()
