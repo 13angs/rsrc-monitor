@@ -16,6 +16,10 @@ class FuelDataScraper:
         if response.status_code != 200:
             raise Exception(f"Failed to load page {self.url}")
         return response.content
+        # with open('./src/sample.html', 'r', encoding='utf-8') as file:
+        #     html_content = file.read()
+        # return html_content
+
     
     def parse_fuel_data(self, html_content: str, class_name: str, provider: str):
         """Parse HTML content to extract fuel prices"""
