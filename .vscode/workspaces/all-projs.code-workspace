@@ -1,0 +1,12 @@
+{
+    "folders": [
+        {
+            "name": "rsrc-monitor",
+            "path": "/workspaces/rsrc-monitor"
+        },
+        {
+            "name": "python",
+            "path": "/workspaces/python"
+        }
+    ]
+}
