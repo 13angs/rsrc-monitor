@@ -8,7 +8,14 @@
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker": {}
-	}
+	},
+	"mounts": [
+		{
+			"source": "dind-var-lib-docker-13angs",
+			"target": "/var/lib/docker",
+			"type": "volume"
+		}
+	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
