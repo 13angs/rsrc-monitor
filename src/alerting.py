@@ -3,25 +3,17 @@ import psycopg2
 from datetime import datetime
 from telegram import Bot
 import asyncio
+from my_env import db_params, telegram_bot_config
 
 # Telegram Bot Token and Chat ID (replace these with your own)
-TELEGRAM_BOT_TOKEN = ''
-TELEGRAM_CHAT_ID = ''
-
-# Database connection details (replace with your PostgreSQL credentials)
-DB_CONFIG = {
-    'dbname': 'rsrc_db',
-    'user': 'myuser',
-    'password': 'mypassword',
-    'host': 'localhost',
-    'port': '5432'
-}
+TELEGRAM_BOT_TOKEN = telegram_bot_config['token']
+TELEGRAM_CHAT_ID = telegram_bot_config['chat_id']
 
 # Connect to PostgreSQL database
 # Connect to PostgreSQL database
 def connect_db():
     try:
-        conn = psycopg2.connect(**DB_CONFIG)
+        conn = psycopg2.connect(**db_params)
         return conn
     except Exception as e:
         print(f"Error connecting to the database: {e}")

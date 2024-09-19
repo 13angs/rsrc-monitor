@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 from db.db_context import DatabaseContext  # Import the generic DB manager
 from db.fuel_repo import FuelRepsitory  # Import the fuel-specific DB manager
+from my_env import db_params, fuel_data_scraper_url
 
 class FuelDataScraper:
     def __init__(self, url: str, db_params: dict):
@@ -109,12 +110,5 @@ class FuelDataScraper:
             self.db_manager.close()  # Close the database connection
 
 if __name__ == "__main__":
-    db_params = {
-        'dbname': 'rsrc_db',
-        'user': 'myuser',
-        'password': 'mypassword',
-        'host': 'localhost',
-        'port': '5432'
-    }
-    scraper = FuelDataScraper(url='https://gasprice.kapook.com/gasprice.php', db_params=db_params)
+    scraper = FuelDataScraper(url=fuel_data_scraper_url, db_params=db_params)
     scraper.run()
