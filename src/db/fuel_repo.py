@@ -21,18 +21,30 @@ class FuelRepsitory:
         self.db_manager.execute(create_table_query)
 
     def insert_fuel_data(self, fuel_data: list):
-        """Insert fuel prices into the database"""
+        """Insert fuel prices into the database, but first check if data for the current date already exists."""
         current_date = datetime.now().strftime('%Y-%m-%d')
-
-        insert_query = '''
-        INSERT INTO fuel_prices (date, provider, type, price)
-        VALUES (%s, %s, %s, %s)
+        
+        # Query to check if data for the current date already exists
+        check_query = '''
+        SELECT 1 FROM fuel_prices WHERE date = %s LIMIT 1
         '''
+        
+        # Execute the check query
+        self.db_manager.execute(check_query, (current_date,))
+        result = self.db_manager.cursor.fetchone()  # Fetch one result from the query
 
-        for entry in fuel_data:
-            self.db_manager.execute(
-                insert_query, (current_date, entry['provider'], entry['type'], entry['price']))
-        print(f"Fuel data inserted successfully.")
+        if result:  # If the result is not empty, data exists
+            print(f"Data for {current_date} already exists in the database.")
+        else:
+            # Insert the new data if no data for the current date exists
+            insert_query = '''
+            INSERT INTO fuel_prices (date, provider, type, price)
+            VALUES (%s, %s, %s, %s)
+            '''
+            for entry in fuel_data:
+                self.db_manager.execute(
+                    insert_query, (current_date, entry['provider'], entry['type'], entry['price']))
+            print(f"Fuel data inserted successfully for {current_date}.")
 
     def get_fuel_prices(self, fuel_type=('แก๊สโซฮอล์ 95', 'แก๊สโซฮอล์ E20', 'ดีเซล B7')):
         today_date = datetime.now().strftime('%Y-%m-%d')
