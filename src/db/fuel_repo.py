@@ -20,17 +20,20 @@ class FuelRepsitory:
         '''
         self.db_manager.execute(create_table_query)
 
-    def insert_fuel_data(self, fuel_data: list):
+    def insert_fuel_data(self, fuel_data: list, provider: str):
         """Insert fuel prices into the database, but first check if data for the current date already exists."""
         current_date = datetime.now().strftime('%Y-%m-%d')
         
         # Query to check if data for the current date already exists
         check_query = '''
-        SELECT 1 FROM fuel_prices WHERE date = %s LIMIT 1
+        SELECT 1 FROM fuel_prices
+        WHERE date = %s AND
+        provider = %s
+        LIMIT 1
         '''
         
         # Execute the check query
-        self.db_manager.execute(check_query, (current_date,))
+        self.db_manager.execute(check_query, (current_date, provider,))
         result = self.db_manager.cursor.fetchone()  # Fetch one result from the query
 
         if result:  # If the result is not empty, data exists

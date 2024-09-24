@@ -5,6 +5,7 @@ import time
 from db.db_context import DatabaseContext  # Import the generic DB manager
 from db.fuel_repo import FuelRepsitory  # Import the fuel-specific DB manager
 from my_env import db_params, fuel_data_scraper_url
+import requests
 
 class FuelDataScraper:
     def __init__(self, url: str, db_params: dict):
@@ -40,56 +41,56 @@ class FuelDataScraper:
         
         return fuel_data
 
-    def save_fuel_data(self, fuel_data: list):
+    def save_fuel_data(self, fuel_data: list, provider: str):
         """Save parsed fuel data into the database"""
-        self.fuel_db_manager.insert_fuel_data(fuel_data)  # Use fuel-specific DB manager
+        self.fuel_db_manager.insert_fuel_data(fuel_data, provider)  # Use fuel-specific DB manager
 
     def scrape_ptt(self, html_content):
         print('Scraping PTT...')
         fuel_data = self.parse_fuel_data(html_content, 'gasprice ptt', 'ptt')
-        self.save_fuel_data(fuel_data)
+        self.save_fuel_data(fuel_data, 'ptt')
         print('Delay for 2 sec...')
         time.sleep(2)
     
     def scrape_bcp(self, html_content):
         print('Scraping BCP...')
         fuel_data = self.parse_fuel_data(html_content, 'gasprice bcp', 'bcp')
-        self.save_fuel_data(fuel_data)
+        self.save_fuel_data(fuel_data, 'bcp')
         print('Delay for 2 sec...')
         time.sleep(2)
     
     def scrape_shell(self, html_content):
         print('Scraping Shell...')
         fuel_data = self.parse_fuel_data(html_content, 'gasprice shell', 'shell')
-        self.save_fuel_data(fuel_data)
+        self.save_fuel_data(fuel_data, 'shell')
         print('Delay for 2 sec...')
         time.sleep(2)
     
     def scrape_esso(self, html_content):
         print('Scraping ESSO...')
         fuel_data = self.parse_fuel_data(html_content, 'gasprice esso', 'esso')
-        self.save_fuel_data(fuel_data)
+        self.save_fuel_data(fuel_data, 'esso')
         print('Delay for 2 sec...')
         time.sleep(2)
     
     def scrape_caltex(self, html_content):
         print('Scraping CALTEX...')
         fuel_data = self.parse_fuel_data(html_content, 'gasprice caltex', 'caltex')
-        self.save_fuel_data(fuel_data)
+        self.save_fuel_data(fuel_data, 'caltex')
         print('Delay for 2 sec...')
         time.sleep(2)
     
     def scrape_pt(self, html_content):
         print('Scraping PT...')
         fuel_data = self.parse_fuel_data(html_content, 'gasprice pt', 'pt')
-        self.save_fuel_data(fuel_data)
+        self.save_fuel_data(fuel_data, 'pt')
         print('Delay for 2 sec...')
         time.sleep(2)
     
     def scrape_susco(self, html_content):
         print('Scraping SUSCO...')
         fuel_data = self.parse_fuel_data(html_content, 'gasprice susco', 'susco')
-        self.save_fuel_data(fuel_data)
+        self.save_fuel_data(fuel_data, 'susco')
         print('Delay for 2 sec...')
         time.sleep(2)
 

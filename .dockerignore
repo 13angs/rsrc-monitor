@@ -1,0 +1,6 @@
+config/
+.devcontainer/
+.github/
+.vscode
+venv/
+.env
