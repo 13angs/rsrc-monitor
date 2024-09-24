@@ -4,3 +4,4 @@ __pycache__/
 .pytest_cache/
 pgdata/
 .env
+docker-compose.prod.yaml
