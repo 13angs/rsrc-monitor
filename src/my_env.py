@@ -17,3 +17,8 @@ telegram_bot_config = {
     'token': os.getenv('TELEGRAM_BOT_TOKEN'),
     'chat_id': os.getenv('TELEGRAM_BOT_CHAT_ID'),
 }
+
+def str_to_bool(s):
+    return {"True": True, "False": False}.get(s, None)
+
+debug=bool(str_to_bool(os.getenv('DEBUG')))

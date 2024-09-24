@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import time
 from db.db_context import DatabaseContext  # Import the generic DB manager
 from db.fuel_repo import FuelRepsitory  # Import the fuel-specific DB manager
-from my_env import db_params, fuel_data_scraper_url
+from my_env import db_params, fuel_data_scraper_url, debug
 import requests
 
 class FuelDataScraper:
@@ -15,13 +15,16 @@ class FuelDataScraper:
 
     def fetch_data(self):
         """Fetch HTML content from the URL"""
-        # response = requests.get(self.url)
-        # if response.status_code != 200:
-        #     raise Exception(f"Failed to load page {self.url}")
-        # return response.content
-        with open('./raw/gasprice.html', 'r', encoding='utf-8') as file:
-            html_content = file.read()
-        return html_content
+
+        if debug:
+            print('Using ./raw/gasprice.html as a sample html file...')
+            with open('./raw/gasprice.html', 'r', encoding='utf-8') as file:
+                html_content = file.read()
+            return html_content
+        response = requests.get(self.url)
+        if response.status_code != 200:
+            raise Exception(f"Failed to load page {self.url}")
+        return response.content
 
     def parse_fuel_data(self, html_content: str, class_name: str, provider: str):
         """Parse HTML content to extract fuel prices"""
