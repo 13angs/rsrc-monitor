@@ -11,3 +11,12 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+      
+  rsrc-monitor:
+    image: 13angs/rsrc-monitor:latest
+    restart: always
+    environment:
+      DATABASE_NAME: rsrc_db
+      DATABASE_USER: myuser
+      DATABASE_PASSWORD: mypassword
+      DATABASE_HOST: postgres
