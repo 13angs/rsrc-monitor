@@ -2,7 +2,7 @@ from db.db_context import DatabaseContext
 from datetime import datetime
 
 
-class FuelRepsitory:
+class FuelRepository:
     def __init__(self, db_manager: DatabaseContext):
         """Initialize with a reference to the generic Repsitory"""
         self.db_manager = db_manager

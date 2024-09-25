@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 from db.db_context import DatabaseContext
-from db.fuel_repo import FuelRepsitory
+from db.fuel_repo import FuelRepository
 from my_env import debug, fuel_data_scraper_url
 
 
@@ -9,7 +9,7 @@ class FuelDataService:
     def __init__(self):
         self.url = fuel_data_scraper_url
         self.db_manager = DatabaseContext()  # Initialize DatabaseContext
-        self.fuel_repo = FuelRepsitory(
+        self.fuel_repo = FuelRepository(
             self.db_manager)  # Fuel-specific DB manager
 
     def fetch_data(self):
