@@ -31,10 +31,8 @@ class FuelRepsitory:
         provider = %s
         LIMIT 1
         '''
-        
-        # Execute the check query
-        self.db_manager.execute(check_query, (current_date, provider,))
-        result = self.db_manager.cursor.fetchone()  # Fetch one result from the query
+
+        result = self.db_manager.fetchone(check_query, (current_date, provider,))  # Fetch one result from the query
 
         if result:  # If the result is not empty, data exists
             print(f"Data for {current_date} already exists in the database.")
@@ -60,6 +58,5 @@ class FuelRepsitory:
         ORDER BY provider, type;
         """
 
-        self.db_manager.execute(query, (fuel_type, today_date,))
-        rows = self.db_manager.cursor.fetchall()
+        rows = self.db_manager.fetchall(query, (fuel_type, today_date,))
         return rows

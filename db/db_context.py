@@ -1,7 +1,8 @@
 import psycopg2
+from my_env import db_params
 
 class DatabaseContext:
-    def __init__(self, db_params: dict):
+    def __init__(self):
         self.db_params = db_params
         self.conn = None
         self.cursor = None
@@ -31,3 +32,13 @@ class DatabaseContext:
             print(f"Database error: {e}")
             self.conn.rollback()
             raise
+    
+    def fetchall(self, query, params=None):
+        """Fetch all results from a query."""
+        self.cursor.execute(query, params)
+        return self.cursor.fetchall()
+
+    def fetchone(self, query, params=None):
+        """Fetch a single result from a query."""
+        self.cursor.execute(query, params)
+        return self.cursor.fetchone()
