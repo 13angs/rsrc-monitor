@@ -1,3 +1,4 @@
+from app.errors.handlers import DatabaseException, error_types
 from db.db_context import DatabaseContext
 from datetime import datetime
 
@@ -35,7 +36,10 @@ class FuelRepository:
         result = self.db_manager.fetchone(check_query, (current_date, provider,))  # Fetch one result from the query
 
         if result:  # If the result is not empty, data exists
-            print(f"Data for {current_date} already exists in the database.")
+            raise DatabaseException(
+                error_type=error_types['conflict']['type'],
+                message=f"Data for {current_date} already exists in the database."
+            )
         else:
             # Insert the new data if no data for the current date exists
             insert_query = '''
@@ -45,7 +49,6 @@ class FuelRepository:
             for entry in fuel_data:
                 self.db_manager.execute(
                     insert_query, (current_date, entry['provider'], entry['type'], entry['price']))
-            print(f"Fuel data inserted successfully for {current_date}.")
 
     def get_fuel_prices(self, fuel_type=('แก๊สโซฮอล์ 95', 'แก๊สโซฮอล์ E20', 'ดีเซล B7')):
         today_date = datetime.now().strftime('%Y-%m-%d')

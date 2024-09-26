@@ -16,11 +16,7 @@ class AlertService:
     def get_fuel_prices(self):
         """Query fuel prices from the database."""
         self.db_context.connect()
-        try:
-            return self.fuel_repo.get_fuel_prices()
-        except Exception as e:
-            print(f"Error querying the database: {e}")
-            return None
+        return self.fuel_repo.get_fuel_prices()
 
     def format_fuel_prices(self, prices):
         """Format the fuel prices by grouping them by type."""

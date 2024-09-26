@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+from app.errors.handlers import DatabaseException
 from db.db_context import DatabaseContext
 from db.fuel_repo import FuelRepository
 from my_env import debug, fuel_data_scraper_url
@@ -70,12 +71,9 @@ class FuelDataService:
 
         # Scrape all providers
         for provider, class_name in class_map.items():
-            try:
-                fuel_data = self.parse_fuel_data(
-                    html_content, class_name, provider)
-                self.save_fuel_data(fuel_data, provider)
-                all_fuel_data.extend(fuel_data)
-            except Exception as e:
-                print(f"Error scraping {provider}: {e}")
+            fuel_data = self.parse_fuel_data(
+                html_content, class_name, provider)
+            self.save_fuel_data(fuel_data, provider)
+            all_fuel_data.extend(fuel_data)
 
         return all_fuel_data
