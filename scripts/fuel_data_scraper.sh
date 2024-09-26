@@ -14,7 +14,7 @@ status=$(echo "$response" | jq '.status')
 echo $message
 echo
 
-if [ "$status" -eq 404 ]; then
+if [ "$status" -eq 200 ]; then
     echo "Now alerting to telegram..."
     response=$(curl http://$CONTAINER_IP:8000/api/alert/fuel)
     
