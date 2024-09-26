@@ -2,6 +2,7 @@
 services:
   postgres:
     image: postgres:13
+    container_name: config-postgres-1
     restart: always
     environment:
       POSTGRES_USER: myuser
@@ -14,6 +15,7 @@ services:
       
   rsrc-monitor:
     image: 13angs/rsrc-monitor:latest
+    container_name: config-rsrc-monitor-1
     restart: always
     environment:
       DATABASE_NAME: rsrc_db
