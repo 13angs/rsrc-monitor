@@ -25,6 +25,7 @@ async def scrape_all_fuel():
         error_response = ErrorDetails(
             type=e.error_type,
             message=e.message,
+            status=404
         )
         return JSONResponse(status_code=error_types['conflict']['status'], content=error_response.model_dump())
     except Exception as e:
