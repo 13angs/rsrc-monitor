@@ -31,6 +31,9 @@ class FuelDataService:
         soup = BeautifulSoup(html_content, 'html.parser')
         article = soup.find('article', class_=class_name)
 
+        if article is None:
+            raise ValueError(f"No article found with class name {class_name}")
+
         # Extract the fuel types and prices
         fuel_data = []
         for li in article.find_all('li'):
