@@ -1,4 +1,4 @@
-# app/services/fuel_alert_service.py
+# alert_service.py
 
 from collections import defaultdict
 from telegram import Bot
